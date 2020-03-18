@@ -197,12 +197,12 @@ class AioEmail(EmailBase):
         self.client = aiosmtplib.SMTP(port=465,timeout=810,hostname=self.smtp,use_tls=True)
         # self.client = smtplib.SMTP('localhost')
         # self.sender = self.client.hostname
-    try:
-        async def send(self, *args, **kwargs):
+    async def send(self, *args, **kwargs):
+        try:
             msg = self.pack(*args, **kwargs)
             await self.client.connect()
             await self.client.login(self.user,self.pwd)
             await self.client.send_message(msg)
             await self.client.quit()
-    except:
-        pass
+        except:
+            pass
