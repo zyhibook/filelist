@@ -1,0 +1,28 @@
+{% extends base.html %}
+{% block content %}
+<form class="signin layui-form" action="/signin" method="POST" href="/home">
+  <div class="layui-form-item">
+    <label class="layui-form-label">帐号</label>
+    <div class="layui-input-block">
+      <input type="text" name="username" required placeholder="请输入用户名或邮箱" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-block">
+      <input type="password" name="password" required placeholder="请输入密码" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item" pane="">
+    <div class="layui-input-block">
+      <input type="checkbox" name="remember" lay-skin="primary" title="记住帐号" checked="checked">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button class="layui-btn" lay-submit lay-filter="default">登录</button>
+      <a class="layui-btn layui-btn-primary btn-forget" href="/reset">忘记密码</a>
+    </div>
+  </div>
+</form>
+{% end %}

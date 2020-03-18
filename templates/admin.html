@@ -1,0 +1,73 @@
+{% extends base.html %}
+
+{% block content %}
+
+<div class="layui-container">
+
+  {% import datetime %}
+  <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+    <ul class="layui-tab-title">
+      <li class="layui-this">密码修改</li>
+      <li>Kindle 推送邮箱</li>
+    </ul>
+    <div class="layui-tab-content">
+      <div class="layui-tab-item layui-show">
+        <form class="layui-form" action="/user" method="POST" href="/home">
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">原密码</label>
+              <div class="layui-input-inline">
+                <input type="password" name="old_password" placeholder="原密码" autocomplete="off" class="layui-input" required lay-verify="required">
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">新密码</label>
+              <div class="layui-input-inline">
+                <input type="password" name="password" placeholder="新密码" autocomplete="off" class="layui-input" required lay-verify="required">
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">新密码</label>
+              <div class="layui-input-inline">
+                <input type="password" name="password" placeholder="新密码" autocomplete="off" class="layui-input" required lay-verify="required">
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="default">保存</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="layui-tab-item">
+        <blockquote class="layui-elem-quote">
+	<p>设置 Kindle 推送邮箱,请先将 service@filelist.cn 添加到已认可的发件人电子邮箱列表,当前推送邮箱 [ {{ current_user.kindle }} ]</p>
+        </blockquote>
+        <form class="layui-form" action="/admin" method="POST">
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">推送邮箱</label>
+              <div class="layui-input-inline">
+                <input name="kindle" placeholder="用于 Kindle 推送的邮箱" autocomplete="off" class="layui-input" required lay-verify="required" {% if current_user.kindle %}value="{{ current_user.kindle }}"{% end %}>
+              </div>
+            </div>
+          </div>
+          <div class="layui-form-item">
+            <div class="layui-input-block">
+              <button class="layui-btn" lay-submit lay-filter="default">提交</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% end %}

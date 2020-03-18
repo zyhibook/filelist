@@ -1,0 +1,37 @@
+{% extends base.html %}
+
+{% block content %}
+<div class="layui-container">
+
+  <table class="layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
+    <thead>
+      <tr>
+        <th>帐号</th>
+        <th>邮箱</th>
+        <th>时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for doc in entries %}
+      <tr>
+        <td>{{ doc.username }}</td>
+        <td>{{ doc.email }}</td>
+        <td>{{ str(doc.created_at)[:19] }}</td>
+        <td>
+          {% if doc.admin %}
+          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm btn-manage">管理员</button>
+          {% else %}
+          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm btn-manage layui-btn-secondary">普通用户</button>
+          {% end %}
+        </td>
+      </tr>
+      {% end %}
+    </tbody>
+  </table>
+  
+  <div id="pagination"></div>
+</div>
+
+{% end %}

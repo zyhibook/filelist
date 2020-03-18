@@ -1,0 +1,225 @@
+@media (min-width: 1300px) {
+  .layui-container {
+    width: 1200px
+  }
+}
+
+@media (min-width: 1400px) {
+  .layui-container {
+    width: 1300px
+  }
+}
+
+@media (min-width: 1500px) {
+  .layui-container {
+    width: 1400px
+  }
+}
+
+@media (min-width: 1600px) {
+  .layui-container {
+    width: 1500px
+  }
+}
+
+.hidden {
+  display: none !important;
+}
+
+#header {
+  margin-bottom: 1rem;
+  background-color: #393D49;
+  width: 100%;
+  height: 60px;
+}
+
+.jumbotron {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border: 1px dashed #ff9163;
+  padding: 40px 0 30px;
+}
+
+#upload-box {
+  width: 100%;
+  background: #fafafa;
+  padding: 20px 0;
+}
+
+.hidden {
+  display: none
+}
+
+body {
+  font: 15px Helvetica Neue, Helvetica, Tahoma, Arial, sans-serif;
+}
+
+th, td {
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  padding: .2rem .5rem !important;
+  text-align: center !important;
+  min-height: 30px !important;
+  line-height: 30px !important;
+}
+
+img, video {
+  max-width: 100% !important
+}
+
+a {
+  color: #4d4e50;
+}
+
+input[type=file] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer;
+}
+
+.crumbs {
+  padding: 10px;
+  background: #f5f5f5;
+  margin-top: 10px;
+  font-weight: 900;
+}
+
+.layui-nav * {
+  font-size: 16px;
+}
+
+.layui-nav .layui-input {
+  margin-left: 20px;
+  height: 30px;
+  line-height: 30px;
+  background-color: rgba(255, 255, 255, .05);
+  border: none 0;
+  color: rgba(255, 255, 255, .5);
+  font-size: 14px;
+}
+
+.logo {
+  color: #fff !important;
+  font-size: 20px;
+  line-height: 60px;
+  position: absolute;
+  z-index: 1000;
+  padding: 0 10px;
+}
+
+.logo+.layui-nav {
+  margin-left: 80px;
+}
+
+.layui-nav li a i {
+  margin-right: 5px;
+}
+
+.layui-nav.user {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.layui-tree {
+  line-height: 22px;
+  padding: 10px;
+}
+
+.layui-tree-branch {
+  display: none
+}
+
+.layui-tree-branch+cite {
+  color: #e20808;
+  font-weight: 900;
+}
+
+.layui-btn .layui-icon {
+  margin-right: 0
+}
+
+.layui-btn, .layui-btn:hover {
+  color: #fff;
+  border: 1px solid #009688;
+}
+
+.layui-btn-default, .layui-btn-default:hover {
+  border: 1px solid #C9C9C9;
+  background-color: #fff;
+  color: #555;
+}
+
+.layui-btn-primary, .layui-btn-primary:hover {
+  border: 1px solid #007bff;
+  background-color: #007bff;
+}
+
+.layui-btn-success, .layui-btn-success:hover {
+  border: 1px solid #28a745;
+  background-color: #28a745;
+}
+
+.layui-btn-danger, .layui-btn-danger:hover {
+  border: 1px solid #FF5722;
+  background-color: #FF5722;
+}
+
+.layui-btn-normal, .layui-btn-normal:hover {
+  border: 1px solid #1E9FFF;
+  background-color: #1E9FFF;
+}
+
+.layui-btn-info, .layui-btn-info:hover {
+  border: 1px solid #17a2b8;
+  background-color: #17a2b8;
+}
+
+.layui-btn-secondary, .layui-btn-secondary:hover {
+  border: 1px solid #6c757d;
+  background-color: #6c757d;
+}
+
+.layui-breadcrumb span[lay-separator] {
+  margin: 0 5px;
+}
+
+.layui-nav .layui-form {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 60px;
+}
+
+@media (max-width: 768px) {
+  body::before {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .layui-nav form {
+    display: none !important
+  }
+  .layui-nav.user {
+    display: block !important
+  }
+}
+
+.signin, .signup, .reset {
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+.tree-toggle {
+  margin-right: 5px;
+}
+
+.layui-layout-admin .layui-body {
+  top: 70px;
+  left: 210px;
+}

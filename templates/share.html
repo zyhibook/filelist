@@ -1,0 +1,36 @@
+{% extends base.html %}
+
+{% block content %}
+<div class="layui-container">
+
+  <table class="layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
+    <thead>
+      <tr>
+        <th>链接</th>
+        <th>文件</th>
+        <th>开始时间</th>
+        <th>截止时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for doc in entries %}
+      <tr>
+        <td><a target="_blank" href="/share/{{ doc._id }}">{{ doc._id }}</></td>
+        <td>{{ doc.path }}</td>
+        <td>{{ str(doc.created_at)[:19] }}</td>
+        <td>{{ str(doc.expired_at)[:19] }}</td>
+        <td>
+          <button class="layui-btn layui-btn-sm btn-copy" data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}/share/{{ doc._id }}">复制</button>
+          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm layui-btn-danger btn-cancel-share">取消分享</button>
+        </td>
+      </tr>
+      {% end %}
+    </tbody>
+  </table>
+  
+  <div id="pagination"></div>
+</div>
+
+{% end %}

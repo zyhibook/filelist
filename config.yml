@@ -1,0 +1,5 @@
+root: files
+admin:
+  username: admin
+  password: 123456
+  email: ywgx@filelist.cn

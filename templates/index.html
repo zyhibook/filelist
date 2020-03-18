@@ -1,0 +1,313 @@
+{% extends base.html %}
+
+{% block title %}
+<title>FILE</title>
+{% end %}
+
+{% block content %}
+    <div class="layui-container">
+      {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
+      <div id="upload-box" class="layui-upload-drag" id="upimg">
+        <i class="layui-icon">&#xe67c;</i>
+        <input type="file" name="myfile" value="上传" multiple webkitdirectory>
+        <p>拖拽文件到此</p>
+      </div>
+      <div class="layui-progress hidden" lay-filter="upload">
+        <div class="layui-progress-bar" lay-percent="0%"></div>
+      </div>
+      {% end %}
+
+      {% import os, urllib.parse %}
+      <div class="crumbs layui-col-md12">
+        <a href="javascript:;" class="tree-toggle"><i class="layui-icon {{ 'layui-icon-shrink-right' if handler.get_cookie('tree') else 'layui-icon-spread-left' }}"></i></a>
+        {% set paths = list(filter(None, handler.get_argument('path', '').rstrip('/').split('/'))) %}
+        <span class="layui-breadcrumb">
+          <a href="{{ handler.request.path }}"> Home </a>
+          {% if paths %}
+          {% for i, path in enumerate(paths) %}
+          <a href="{{ handler.request.path }}?path={{ '/'.join(paths[:i+1]) }}">{{ urllib.parse.unquote(path) }}</a>
+          {% end %}
+          {% end %}
+        </span>
+      </div>
+      <div class="layui-row">
+        <div class="layui-col-md3" style="min-height:0.1px;">
+          <ul id="tree" {% if not handler.get_cookie('tree') %}class="hidden"{% end %}></ul>
+        </div>
+        <div class="tree-table layui-col-md{{ 9 if handler.get_cookie('tree') else 12 }}">
+          <table class="layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
+            <thead>
+              <tr>
+                <th style="width:50px;">
+                  {% if handler.mode == 'home' %}
+                  <button class="layui-btn layui-btn-danger layui-btn-xs btn-delete"><i class="layui-icon layui-icon-delete"></i></button>
+                  {% end %}
+                </th>
+                <th style="text-align:left !important">
+                  <a class="btn-change" href="javascript:;">{% if handler.get_cookie('display') %}预览模式{% else %}列表模式{% end %}</a> |
+                  <span>文件总数 {{ handler.args.total }} </span>
+                </th>
+                <th style="width:100px;">操作</th>
+                <th style="width:160px;">时间</th>
+                <th style="width:80px;">大小</th>
+              {% if current_user and current_user.username in ['admin'] %}
+                <th style="width:80px;">统计</th>
+	      {% end %}
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for entry in entries %}
+              <tr>
+                <td class="select"><input type="checkbox"></td>
+                <td style="text-align:left !important">
+                  {% if handler.get_cookie('display') and entry[0].suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp'] %}
+                  <img style="display:block" src="{{ handler.request.path }}?path={{ entry[0] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
+                  {% elif handler.get_cookie('display') and entry[0].suffix.lower() in ['.mp4'] %}
+                  <video style="display:block" controls="controls">
+                    <source src="/{{ entry[0] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
+                  </video>
+                  {% elif handler.get_cookie('display') and entry[0].suffix.lower() in ['.mp3', '.amr', '.ogg', '.wav', '.m4a'] %}
+                  <audio style="display:block" controls="controls" ><source src="{{ handler.request.path }}?path={{ entry[0] }}"></audio>
+                  {% else %}
+                  {% set icon = 'folder.png' if entry[3] else handler.icon.get(entry[0].suffix.lower(), 'file.png') %}
+                  <img width=18 height=18 style="margin-bottom:3px" src="{{ static_url(f'src/img/{icon}') }}">
+                  {% end %}
+                  <a href="{{ handler.request.path }}?path={{ entry[0] }}">{{ entry[0].name }}</a>
+                </td>
+                <td style="text-align:left !important">
+                  {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
+                  {% if entry[0].suffix.lower() in ['.tar', '.gz', '.bz2', '.xz', '.tgz', '.bz2', '.bz', '.zip'] %}
+                  <button class="layui-btn layui-btn-normal layui-btn-xs btn-compress">解压</button>
+                  {% elif entry[0].suffix.lower() in ['.lua', '.json', '.yml', '.yaml', '.jpg', '.jpeg', '.ico','.bmp', '.png','.mp3', '.mp4', '.ogg', '.pdf','.txt', '.md', '.py', '.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue', '.ipynb','.conf'] %}
+                  <button class="layui-btn layui-btn-success layui-btn-xs btn-open">预览</button>
+                  {% elif entry[3] %}
+                  <button class="layui-btn layui-btn-primary layui-btn-xs btn-compress">压缩</button>
+                  {% else %}
+                  <a href="{{ handler.request.path }}?path={{ entry[0] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">下载</a>
+                  {% end %}
+                  {% end %}
+                  {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
+                  <button class="layui-btn layui-btn-danger layui-btn-xs btn-delete btn-delete-single">
+                    <i class="layui-icon layui-icon-delete"></i>
+                  </button>
+                  {% end %}
+                  {% if handler.request.path == '/public' or handler.request.path.startswith('/share') %}
+                  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-copy">
+                    <i class="layui-icon layui-icon-link"></i>
+                  </button>
+                  {% else %}
+                  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-share">
+                    <i class="layui-icon layui-icon-share"></i>
+                  </button>
+                  {% end %}
+                  {% if not entry[3] %}
+                  <a href="{{ handler.request.path }}?path={{ entry[0] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">
+                    <i class="layui-icon layui-icon-download-circle"></i>
+                  </a>
+                  {% end %}
+                  {% if current_user and entry[0].suffix.lower() in ['.pdf', '.txt', '.mobi', '.azw', '.doc', '.docx', '.html', '.htm', '.rtf', '.jpeg', '.jpg', '.gif', '.png', '.bmp'] %}
+                  <button class="layui-btn layui-btn-info layui-btn-xs btn-kindle">
+                    <i class="layui-icon layui-icon-upload-drag"></i>
+                  </button>
+                  {% end %}
+                </td>
+                <td>{{ entry[1] }}</td>
+                <td>{{ entry[2] }}</td>
+              {% if current_user and current_user.username in ['admin'] %}
+                <td>{{ entry[4] }}</td>
+	      {% end %}
+              </tr>
+              {% end %}
+            </tbody>
+          </table>
+       <button class="btn-copy hidden" id="copy-share-url" data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}"></button>
+          <div id="pagination"></div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% end %}
+
+{% block js %}
+<script>
+  layui.use(['layer', 'element', 'tree'], function(){
+    var layer = layui.layer;
+    var element = layui.element;
+    var $ = layui.$;
+
+    $(function(){
+      var info = $("#upload-box p")
+      $(document).on({
+        dragenter: function(e){
+          e.stopPropagation();
+          e.preventDefault();
+        },
+        dragover: function(e){
+          e.stopPropagation();
+          e.preventDefault();
+          info.html("松开鼠标开始上传")
+        },
+        dragleave: function(e){
+          e.stopPropagation();
+          e.preventDefault();
+          info.html("拖拽到这里上传");
+        },
+        drop: function(e){
+          e.stopPropagation();
+          e.preventDefault();
+          upload(e.originalEvent.dataTransfer.files);
+        },
+        paste_drop: function(e){
+          e.stopPropagation();
+          e.preventDefault();
+          var clipboardData = (e.clipboardData || e.originalEvent.clipboardData)
+          if(clipboardData.items){
+            var items = clipboardData.items
+            for(i=0; i < items.length; i++){
+              if (items[i].type.indexOf("image") >= 0) {
+                upload([items[i].getAsFile()])
+              }
+            }
+          }
+        }
+      });
+
+      function upload(files){
+        info.html("上传中...");
+        $(".layui-progress").removeClass("hidden")
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData();
+        for(var i = 0; i < files.length; i++){
+          formData.append("myfile", files[i]);
+        }
+        xhr.upload.onprogress = function(e){
+          if(e.lengthComputable){
+            var percent = Math.round((e.loaded * 100)/ e.total);
+            info.html("上传中(" + percent + "%)...");
+            element.progress("upload", percent + "%");
+          }
+        }
+        xhr.onload = function(e){
+          info.html("上传成功");
+          location.reload();
+        }
+        xhr.onerror = function(e){
+          info.html("上传失败")
+        }
+        xhr.open("post", location.href, true);
+        xhr.send(formData);
+      }
+
+      $("input[type=file]").on("change", function(){
+        upload(this.files);
+      });
+
+      $(document).on("click", ".select", function(){
+        var checkbox = $(this).parents("tr").find("input[type=checkbox]")
+        checkbox.prop('checked', !checkbox.prop('checked'))
+      });
+
+      $(document).on("click", "input[type=checkbox]", function(event){
+        event.stopPropagation()
+      });
+
+      $(document).on("click", ".btn-delete", function(){
+        if($(this).hasClass("btn-delete-single")){
+          $(this).parents("tr").find("input[type=checkbox]").prop('checked', true);
+        }
+        layer.confirm('确定删除?', {icon: 2, title: '提示'}, function(index){
+          layer.msg('deleting', {time: 6000000});
+          $("input:checkbox:checked").each(function(){
+            var tr = $(this).parents("tr");
+            var url = tr.find("a").attr("href");
+            $.ajax({
+              url: url,
+              method: "DELETE",
+              success: function(data, textStatus, jqXHR){
+                tr.slideUp();
+              },
+              error: function(jqXHR, textStatus, errorThrown){
+                alert(textStatus);
+              },
+              complete: function(jqXHR){
+                layer.closeAll()
+              }
+            })
+          })
+        })
+      });
+
+      $(document).on("click", ".btn-compress", function(){
+        var tr = $(this).parents("tr");
+        var url = tr.find("a").attr("href");
+        layer.msg('executing', {time: 6000000});
+        $.ajax({
+          url: url,
+          method: "HEAD",
+          success: function(data, textStatus, jqXHR){
+            layer.msg('succeed');
+            location.reload();
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+            layer.msg(textStatus);
+          },
+          complete: function(jqXHR){
+            layer.closeAll()
+          }
+        })
+      });
+
+      $(document).on("click", ".btn-change", function(){
+          if(getCookie("display")){
+            removeCookie("display")
+          }else{
+            setCookie("display", "on")
+          }
+          layer.msg("切换中...")
+          location.reload()
+      })
+
+      $(document).on("click", ".btn-open", function(){
+        var tr = $(this).parents("tr");
+        var url = tr.find("a").attr("href");
+        var title = tr.find("a").text();
+        layer.open({
+          type: 2,
+          title: title,
+          content: url,
+          shadeClose: true,
+          area: ['1000px', '700px'],
+          success: function(layero, index){
+            $("iframe").contents().find("img").css({"max-width":"100%", "margin": "0 auto"});
+          }
+        });
+      })
+
+      if(getCookie('tree')){
+        layui.tree({
+          elem: '#tree',
+          nodes: JSON.parse('{% raw nodes %}'),
+        });
+      }
+
+    $(document).on("click", ".tree-toggle", function(){
+      if(getCookie("tree")){
+        removeCookie("tree")
+        $('.tree-toggle i').removeClass("layui-icon-shrink-right").addClass("layui-icon-spread-left")
+        $("#tree").addClass("hidden")
+        $(".tree-table").addClass("layui-col-md12").removeClass("layui-col-md9")
+      }else{
+        setCookie("tree", "on")
+        $('.tree-toggle i').removeClass("layui-icon-spread-left").addClass("layui-icon-shrink-right")
+        $("#tree").removeClass("hidden")
+        $(".tree-table").addClass("layui-col-md9").removeClass("layui-col-md12")
+        location.reload()
+      }
+    })
+    })
+  });
+
+</script>
+{% end %}
