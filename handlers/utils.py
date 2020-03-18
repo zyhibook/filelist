@@ -179,8 +179,6 @@ class Email(EmailBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.client = smtplib.SMTP()
-        # self.client = smtplib.SMTP('localhost')
-        # self.sender = self.client.local_hostname
 
     def send(self, *args, **kwargs):
         msg = self.pack(*args, **kwargs)
@@ -195,14 +193,13 @@ class AioEmail(EmailBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.client = aiosmtplib.SMTP(port=465,timeout=810,hostname=self.smtp,use_tls=True)
-        # self.client = smtplib.SMTP('localhost')
-        # self.sender = self.client.hostname
+
     async def send(self, *args, **kwargs):
         try:
             msg = self.pack(*args, **kwargs)
             await self.client.connect()
             await self.client.login(self.user,self.pwd)
             await self.client.send_message(msg)
-            await self.client.quit()
         except:
             pass
+        await self.client.quit()
