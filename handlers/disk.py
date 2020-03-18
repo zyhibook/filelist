@@ -219,6 +219,11 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
                     self.set_header('Content-Disposition', f'attachment;filename={parse.quote(path.name)}')
                 await super().get(name, include_body)
             else:
+                zh = re.compile(u'[\u4e00-\u9fa5]+')
+                if zh.search(path.name):
+                    self.set_header('Content-Disposition', f"attachment;filename*=UTF-8''{parse.quote(path.name.encode('UTF-8'))}")
+                else:
+                    self.set_header('Content-Disposition', f'attachment;filename={parse.quote(path.name)}')
                 await super().get(name, include_body)
         else:
             entries = await self.listdir(path)
