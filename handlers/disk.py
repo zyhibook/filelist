@@ -209,8 +209,10 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
                     dl = await asyncio.create_subprocess_shell(command)
                     await dl.wait()
                     self.finish(fp.read().replace('<link rel="stylesheet" href="custom.css">', ''))
-            elif path.suffix.lower() in ['.py','.lua','.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue','.conf']:
+            elif path.suffix.lower() in ['.md','.txt','.py','.lua','.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue','.conf','.yml','.yaml','.ipynb']:
                 self.send_html(f'''<pre><code>{ tornado.escape.xhtml_escape(path.read_text()) }</code></pre>''')
+            elif path.suffix.lower() in ['.jpg', '.jpeg', '.ico','.bmp', '.png','.mp3', '.mp4', '.ogg', '.pdf']:
+                await super().get(name, include_body)
             elif mode not in ['public', 'home']:
                 zh = re.compile(u'[\u4e00-\u9fa5]+')
                 if zh.search(path.name):
