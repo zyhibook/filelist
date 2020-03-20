@@ -192,7 +192,7 @@ class AioEmail(EmailBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.client = aiosmtplib.SMTP(port=465,timeout=810,hostname=self.smtp,use_tls=True)
+        self.client = aiosmtplib.SMTP(port=465,timeout=49,hostname=self.smtp,use_tls=True)
 
     async def send(self, *args, **kwargs):
         try:
