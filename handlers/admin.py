@@ -8,7 +8,6 @@
 '''
 后台管理模块，记录用户云存储认证信息
 '''
-
 from bson import ObjectId
 import tornado.web
 
