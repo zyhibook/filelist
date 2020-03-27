@@ -14,7 +14,6 @@ import threading
 import time
 import yaml
 from pathlib import Path
-
 from tornado.curl_httpclient import CurlAsyncHTTPClient
 from tornado.options import define
 from tornado.options import options
