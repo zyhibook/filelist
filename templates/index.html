@@ -50,7 +50,7 @@
                 <th style="width:100px;">操作</th>
                 <th style="width:160px;">时间</th>
                 <th style="width:80px;">大小</th>
-              {% if current_user and current_user.username in ['admin'] %}
+              {% if current_user and current_user.username in ['admin','ywgx'] %}
                 <th style="width:80px;">统计</th>
 	      {% end %}
               </tr>
@@ -114,7 +114,7 @@
                 </td>
                 <td>{{ entry[1] }}</td>
                 <td>{{ entry[2] }}</td>
-              {% if current_user and current_user.username in ['admin'] %}
+              {% if current_user and current_user.username in ['admin','ywgx'] %}
                 <td>{{ entry[4] }}</td>
 	      {% end %}
               </tr>
