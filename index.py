@@ -5,6 +5,7 @@
 # Version     : 2.0
 # Author      : XABCLOUD.COM
 #*************************************************
+import binascii
 import collections
 import hashlib
 import uuid
@@ -68,7 +69,10 @@ class Application(Application):
                     size = '%.1f KB' % (filesize / 1024.0)
                 mtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(stat.st_mtime))
                 sum = int(self.rd.get("FILELIST:"+str(path))) if self.rd.exists("FILELIST:"+str(path)) else 0
-                entries.append([path, mtime, size, item.is_dir(),sum])
+                path_16ascii = b''
+                for data in str(path):
+                    path_16ascii = path_16ascii + b'%' + binascii.b2a_hex(bytes(data, 'utf-8'))
+                entries.append([path, mtime, size, item.is_dir(),sum, path_16ascii])
             entries.sort(key=lambda x: str(x[1]).lower(), reverse=True)
             self.cache[dirname][root] = [st_mtime, entries]
         return entries
