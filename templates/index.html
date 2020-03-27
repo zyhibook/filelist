@@ -62,7 +62,7 @@
                 <td class="select"><input type="checkbox"></td>
                 <td style="text-align:left !important">
                   {% if handler.get_cookie('display') and entry[0].suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp'] %}
-                  <img style="display:block" src="{{ handler.request.path }}?path={{ entry[0] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
+                  <img style="display:block" src="{{ handler.request.path }}?path={{ entry[5] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
                   {% elif handler.get_cookie('display') and entry[0].suffix.lower() in ['.mp4'] %}
                   <video style="display:block" controls="controls">
                     <source src="/{{ entry[0] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
@@ -73,7 +73,7 @@
                   {% set icon = 'folder.png' if entry[3] else handler.icon.get(entry[0].suffix.lower(), 'file.png') %}
                   <img width=18 height=18 style="margin-bottom:3px" src="{{ static_url(f'src/img/{icon}') }}">
                   {% end %}
-                  <a href="{{ handler.request.path }}?path={{ entry[0] }}">{{ entry[0].name }}</a>
+                  <a href="{{ handler.request.path }}?path={{ entry[5] }}">{{ entry[0].name }}</a>
                 </td>
                 <td style="text-align:left !important">
                   {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
@@ -84,7 +84,7 @@
                   {% elif entry[3] %}
                   <button class="layui-btn layui-btn-primary layui-btn-xs btn-compress">压缩</button>
                   {% else %}
-                  <a href="{{ handler.request.path }}?path={{ entry[0] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">下载</a>
+                  <a href="{{ handler.request.path }}?path={{ entry[5] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">下载</a>
                   {% end %}
                   {% end %}
                   {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
