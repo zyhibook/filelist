@@ -201,7 +201,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
                 self.finish(doc)
             elif path.suffix.lower() in ['.md', '.markdown']:
                 exts = ['markdown.extensions.extra', 'markdown.extensions.codehilite', 'markdown.extensions.tables', 'markdown.extensions.toc']
-                html = markdown.markdown(path.read_text(), extensions=exts)
+                html = markdown.markdown(path.read_text(encoding='unicode_escape'), extensions=exts)
                 self.send_html(html)
             elif path.suffix.lower() == '.ipynb':
                 with tempfile.NamedTemporaryFile('w+', suffix=f'.html', delete=True) as fp:
@@ -210,7 +210,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
                     await dl.wait()
                     self.finish(fp.read().replace('<link rel="stylesheet" href="custom.css">', ''))
             elif path.suffix.lower() in ['.md','.txt','.py','.lua','.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue','.conf','.yml','.yaml','.ipynb']:
-                self.send_html(f'''<pre><code>{ tornado.escape.xhtml_escape(path.read_text()) }</code></pre>''')
+                self.send_html(f'''<pre><code>{ tornado.escape.xhtml_escape(path.read_text(encoding='unicode_escape')) }</code></pre>''')
             elif path.suffix.lower() in ['.jpg', '.jpeg', '.ico','.bmp', '.png','.mp3', '.mp4', '.ogg', '.pdf']:
                 await super().get(name, include_body)
             elif mode not in ['public', 'home']:
