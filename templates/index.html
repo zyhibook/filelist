@@ -35,7 +35,7 @@
           <ul id="tree" {% if not handler.get_cookie('tree') %}class="hidden"{% end %}></ul>
         </div>
         <div class="tree-table layui-col-md{{ 9 if handler.get_cookie('tree') else 12 }}">
-          <table class="layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
+          <table class="filelist layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
             <thead>
               <tr>
                 <th style="width:50px;">
@@ -44,6 +44,9 @@
                   {% end %}
                 </th>
                 <th style="text-align:left !important">
+                  <button class="layui-btn layui-btn-xs layui-btn-radius batch-select">全选</button>
+                  <button class="layui-btn layui-btn-xs layui-btn-radius batch-unselect">反选</button>
+                  <button class="layui-btn layui-btn-xs layui-btn-radius batch-share">分享</button>
                   <a class="btn-change" href="javascript:;">{% if handler.get_cookie('display') %}预览模式{% else %}列表模式{% end %}</a> |
                   <span>文件总数 {{ handler.args.total }} </span>
                 </th>
@@ -212,6 +215,48 @@
       $(document).on("click", "input[type=checkbox]", function(event){
         event.stopPropagation()
       });
+
+      $(document).on('click', '.batch-select', function(){
+        $('.filelist tbody tr').each(function(){
+          $(this).find('input[type=checkbox]').prop('checked', true);
+        })
+      })
+  
+      $(document).on('click', '.batch-unselect', function(){
+        $('.filelist tbody tr').each(function(){
+          var checkbox = $(this).find("input[type=checkbox]")
+          checkbox.prop('checked', !checkbox.prop('checked'))
+        })
+      })
+
+      $(document).on('click', '.batch-share', function(){
+        layer.prompt({
+          formType: 2,
+          value: '1',
+          title: '请输入分享天数',
+          area: ['200px', '50px'] //自定义文本域宽高
+        }, function(value, index, elem){
+          layer.close(index);
+          $("input:checkbox:checked").each(function(){
+            var tr = $(this).parents("tr");
+            var url = tr.find("a").attr("href");
+            $.ajax({
+               method: 'PUT',
+               url: url,
+               data: {'days': value},
+               success: function(ret){
+                 if(ret.err) layer.msg(ret.msg)
+                 else {
+                   layer.msg(url + '分享成功')
+                 }
+               },
+               error: function(){
+                 layer.msg(url + '分享失败')
+               }
+             })
+          })
+        })
+      })
 
       $(document).on("click", ".btn-delete", function(){
         if($(this).hasClass("btn-delete-single")){
