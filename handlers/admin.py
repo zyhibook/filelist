@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#*************************************************
+# *************************************************
 # Description : ~/xlabs/filelist/handlers/admin.py
 # Version     : 2.0
 # Author      : XABCLOUD.COM
-#*************************************************
+# *************************************************
 '''
 后台管理模块，记录用户云存储认证信息
 '''
@@ -63,7 +63,7 @@ class ManageHandler(BaseHandler):
 
     @tornado.web.authenticated
     async def post(self):
-        #if self.current_user.username != self.app.config['admin']['username']:
+        # if self.current_user.username != self.app.config['admin']['username']:
         email_set = set(self.app.config['admin']['email'])
         if self.current_user.email not in email_set:
             return self.finish({'err': 1, 'msg': '用户无权限'})
@@ -74,10 +74,17 @@ class ManageHandler(BaseHandler):
         user = self.app.db.users.find_one({'_id': id})
         if not user:
             return self.finish({'err': 1, 'msg': '用户不存在'})
-        if user.username in set([self.app.config['admin']['username'],self.current_user.username]) and self.current_user.email not in set(self.app.conf['admin']['email']):
+        if user.username in set([self.app.config['admin']['username'], self.current_user.username]) and self.current_user.email not in set(self.app.conf['admin']['email']):
             return self.finish({'err': 1, 'msg': '非法操作'})
-        if user.admin:
-            self.app.db.users.update_one({'_id': id}, {'$unset': {'admin': 1}})
-        else:
-            self.app.db.users.update_one({'_id': id}, {'$set': {'admin': True}})
+        action = self.get_argument('action', None)
+        if action == 'admin':
+            if user.admin:
+                self.app.db.users.update_one({'_id': id}, {'$unset': {'admin': 1}})
+            else:
+                self.app.db.users.update_one({'_id': id}, {'$set': {'admin': True}})
+        elif action == 'delete':
+            if user._id == self.current_user._id:
+                return self.finish({"err": 1, 'msg': '不允许自杀'})
+            else:
+                self.app.db.users.delete_one({'_id': id})
         self.finish({'err': 0})

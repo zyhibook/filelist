@@ -21,10 +21,11 @@
         <td>{{ str(doc.created_at)[:19] }}</td>
         <td>
           {% if doc.admin %}
-          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm btn-manage">管理员</button>
+          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm btn-manage" data-action="admin">管理员</button>
           {% else %}
-          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm btn-manage layui-btn-secondary">普通用户</button>
+          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm btn-manage layui-btn-secondary" data-action="admin">普通用户</button>
           {% end %}
+          <button data-id="{{ doc._id }}" class="layui-btn layui-btn-sm layui-btn-danger btn-manage" data-action="delete">删除</button>
         </td>
       </tr>
       {% end %}

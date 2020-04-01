@@ -137,7 +137,8 @@ layui.config({ base: '/static/src/js/' }).use(['layer', 'element', 'laytpl', 'fo
 
   $('.btn-manage').on('click', function() {
     var id = $(this).data('id')
-    $.post(location.path, {'id': id}, function(ret){
+    var action = $(this).data('action')
+    $.post(location.path, {'id': id, 'action': action}, function(ret){
       if(ret.err) layer.msg(ret.msg)
       else {
         layer.msg('设置成功')
