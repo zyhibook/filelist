@@ -63,8 +63,7 @@ class ManageHandler(BaseHandler):
 
     @tornado.web.authenticated
     async def post(self):
-        # if self.current_user.username != self.app.config['admin']['username']:
-        email_set = set(self.app.config['admin']['email'])
+        email_set = set([self.app.config['admin']['email']])
         if self.current_user.email not in email_set:
             return self.finish({'err': 1, 'msg': '用户无权限'})
         id = self.get_argument('id', None)
