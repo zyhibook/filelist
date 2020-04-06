@@ -19,35 +19,41 @@
 
       {% import os, urllib.parse %}
       <div class="crumbs layui-col-md12">
-        <a href="javascript:;" class="tree-toggle"><i class="layui-icon {{ 'layui-icon-shrink-right' if handler.get_cookie('tree') else 'layui-icon-spread-left' }}"></i></a>
-        {% set paths = list(filter(None, handler.get_argument('path', '').rstrip('/').split('/'))) %}
-        <span class="layui-breadcrumb">
-          <a href="{{ handler.request.path }}"> Home </a>
-          {% if paths %}
-          {% for i, path in enumerate(paths) %}
-          <a href="{{ handler.request.path }}?path={{ '/'.join(paths[:i+1]) }}">{{ urllib.parse.unquote(path) }}</a>
-          {% end %}
-          {% end %}
-        </span>
+	    <div class="layui-col-md9">
+			<a title="tree-toggle" href="javascript:;" class="tree-toggle"><i class="layui-icon {{ 'layui-icon-shrink-right' if handler.get_cookie('tree') else 'layui-icon-spread-left' }}"></i></a>
+			<a title="预览" class="btn-preview" href="javascript:;" style="margin-right:5px"><i class="layui-icon {{ 'layui-icon-pause' if handler.get_cookie('preview') else 'layui-icon-play' }}"></i></a>
+			<a title="样式" class="btn-display" href="javascript:;" style="margin-right:5px"><i class="layui-icon {{ 'layui-icon-table' if handler.get_cookie('display') else 'layui-icon-list' }}" style="font-size:20px"></i></a>
+			{% set paths = list(filter(None, handler.get_argument('path', '').rstrip('/').split('/'))) %}
+			<span class="layui-breadcrumb">
+			  <a title="首页" href="{{ handler.request.path }}"> <i class="layui-icon layui-icon-home"></i> </a>
+			  {% if paths %}
+			  {% for i, path in enumerate(paths) %}
+			  <a href="{{ handler.request.path }}?path={{ '/'.join(paths[:i+1]) }}">{{ urllib.parse.unquote(path) }}</a>
+			  {% end %}
+			  {% end %}
+			</span>
+		</div>
+		<div class="layui-col-md3" style="text-align:right;">
+			{% if handler.mode == 'home' %}
+		    <button title="批量删除" class="layui-btn layui-btn-danger layui-btn-xs btn-delete"><i class="layui-icon layui-icon-delete"></i></button>
+			{% end %}
+			<a title="全选" class="batch-select" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-add-1" style="font-size:18px"></i></a>
+			<a title="反选" class="batch-unselect" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-fonts-clear" style="font-size:18px"></i></a>
+			<a title="批量分享" class="batch-share" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-share"></i></a>
+		</div>
       </div>
       <div class="layui-row">
         <div class="layui-col-md3" style="min-height:0.1px;">
           <ul id="tree" {% if not handler.get_cookie('tree') %}class="hidden"{% end %}></ul>
         </div>
         <div class="tree-table layui-col-md{{ 9 if handler.get_cookie('tree') else 12 }}">
-          <table class="filelist layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
+		  {% if handler.get_cookie('display') %}
+		  <table class="filelist layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
             <thead>
               <tr>
-                <th style="width:50px;">
-                  {% if handler.mode == 'home' %}
-                  <button class="layui-btn layui-btn-danger layui-btn-xs btn-delete"><i class="layui-icon layui-icon-delete"></i></button>
-                  {% end %}
-                </th>
+			    <th style="width:50px;">选择</th>
                 <th style="text-align:left !important">
-                  <a class="batch-select" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-add-1" style="font-size:18px"></i></a>
-                  <a class="batch-unselect" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-fonts-clear" style="font-size:18px"></i></a>
-                  <a class="batch-share" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-share"></i></a>
-                  <a class="btn-change" href="javascript:;" style="margin-right:5px"><i class="layui-icon {{ 'layui-icon-pause' if handler.get_cookie('display') else 'layui-icon-play' }}"></i></a>
+                  文件名
                 </th>
                 <th style="width:100px;">操作</th>
                 <th style="width:160px;">时间</th>
@@ -63,19 +69,19 @@
               <tr>
                 <td class="select"><input type="checkbox"></td>
                 <td style="text-align:left !important">
-                  {% if handler.get_cookie('display') and entry[0].suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp'] %}
+                  {% if handler.get_cookie('preview') and entry[0].suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp'] %}
                   <img style="display:block" src="{{ handler.request.path }}?path={{ entry[5] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
-                  {% elif handler.get_cookie('display') and entry[0].suffix.lower() in ['.mp4'] %}
+                  {% elif handler.get_cookie('preview') and entry[0].suffix.lower() in ['.mp4'] %}
                   <video style="display:block" controls="controls">
                     <source src="/{{ entry[0] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
                   </video>
-                  {% elif handler.get_cookie('display') and entry[0].suffix.lower() in ['.mp3', '.amr', '.ogg', '.wav', '.m4a'] %}
+                  {% elif handler.get_cookie('preview') and entry[0].suffix.lower() in ['.mp3', '.amr', '.ogg', '.wav', '.m4a'] %}
                   <audio style="display:block" controls="controls" ><source src="{{ handler.request.path }}?path={{ entry[0] }}"></audio>
                   {% else %}
                   {% set icon = 'folder.png' if entry[3] else handler.icon.get(entry[0].suffix.lower(), 'file.png') %}
                   <img width=18 height=18 style="margin-bottom:3px" src="{{ static_url(f'src/img/{icon}') }}">
                   {% end %}
-                  <a href="{{ handler.request.path }}?path={{ entry[5] }}">{{ entry[0].name }}</a>
+                  <a target="_blank" href="{{ handler.request.path }}?path={{ entry[5] }}">{{ entry[0].name }}</a>
                 </td>
                 <td style="text-align:left !important">
                   {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
@@ -123,9 +129,59 @@
               {% end %}
             </tbody>
           </table>
+		  {% else %}
+		  <div id="masonry" class="layui-row layui-col-space15" style="margin-top: 10px;">
+		    {% for entry in entries %}
+			<div class="layui-col-md2">
+				<div class="layui-card">
+					<div class="layui-card-body">
+						<a target="_blank" href="{{ handler.request.path }}?path={{ entry[5] }}">
+							  {% if handler.get_cookie('preview') and entry[0].suffix.lower() in ['.jpg', '.jpeg', '.png', '.bmp', '.gif', '.webp'] %}
+							  <img style="display:block" src="{{ handler.request.path }}?path={{ entry[5] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
+							  {% elif handler.get_cookie('preview') and entry[0].suffix.lower() in ['.mp4'] %}
+							  <video style="display:block" controls="controls">
+								<source src="/{{ entry[0] }}" {% if handler.w %}width="{{ int(handler.w) }}"{% end %} {% if handler.h %}height="{{ int(handler.h) }}"{% end %}>
+							  </video>
+							  {% elif handler.get_cookie('preview') and entry[0].suffix.lower() in ['.mp3', '.amr', '.ogg', '.wav', '.m4a'] %}
+							  <audio style="display:block" controls="controls" ><source src="{{ handler.request.path }}?path={{ entry[0] }}"></audio>
+							  {% else %}
+							  {% set icon = 'folder.png' if entry[3] else handler.icon.get(entry[0].suffix.lower(), 'file.png') %}
+							  <img width=80 height=80 style="margin-bottom:3px" src="{{ static_url(f'src/img/{icon}') }}">
+							  {% end %}
+							  <p class="display-name">{{ entry[0].name }}</p>
+						</a>
+						  <div class="act">
+							  
+							  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-copy">
+								<i class="layui-icon layui-icon-link"></i>
+							  </button>
+
+							  {% if not entry[3] %}
+							  <a href="{{ handler.request.path }}?path={{ entry[5] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">
+								<i class="layui-icon layui-icon-download-circle"></i>
+							  </a>
+							  {% end %}
+							  {#
+								  {% if current_user and entry[0].suffix.lower() in ['.pdf', '.txt', '.mobi', '.azw', '.doc', '.docx', '.html', '.htm', '.rtf', '.jpeg', '.jpg', '.gif', '.png', '.bmp'] %}
+								  <button class="layui-btn layui-btn-info layui-btn-xs btn-kindle">
+									<i class="layui-icon layui-icon-upload-drag"></i>
+								  </button>
+								  {% end %}
+							  #}
+						  </div>
+					</div>
+				</div>
+			</div>
+			{% end %}
+		  </div>
+		  {% end %}
+		  
+		  
        <button class="btn-copy hidden" id="copy-share-url" data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}"></button>
           <div id="pagination"></div>
         </div>
+		
+		
       </div>
     </div>
 </div>
@@ -303,15 +359,25 @@
         })
       });
 
-      $(document).on("click", ".btn-change", function(){
-          if(getCookie("display")){
-            removeCookie("display")
+      $(document).on("click", ".btn-preview", function(){
+          if(getCookie("preview")){
+            removeCookie("preview")
           }else{
-            setCookie("display", "on")
+            setCookie("preview", "on")
           }
           layer.msg("切换中...")
           location.reload()
       })
+	  
+	  $(document).on("click", ".btn-display", function(){
+			if(getCookie("display")){
+				removeCookie("display")
+			}else{
+				setCookie("display", "on")
+			}
+			layer.msg("切换中...")
+			location.reload()
+	  })
 
       $(document).on("click", ".btn-open", function(){
         var tr = $(this).parents("tr");
@@ -350,6 +416,13 @@
         location.reload()
       }
     })
+	
+	$('.layui-card').hover(function(){
+			$(this).find('.layui-btn').css({'display':'block'});
+		},function(){		
+			$(this).find('.layui-btn').css({'display':'none'});
+		})
+	
     })
   });
 

@@ -90,6 +90,37 @@ input[type=file] {
   font-weight: 900;
 }
 
+.crumbs a i {
+  font-size: 16px;
+  margin-right: 8px;
+}
+.layui-breadcrumb>* {
+  font-size: 14px;
+}
+.layui-icon:hover {
+    color: #63ab5e;
+}
+.layui-card {
+  background-color: #f9f9f9;
+  text-align: center;
+  height:145px;
+}
+.layui-card .act {position:absolute;bottom:-12px;}
+.layui-card .layui-btn{margin-left:2px;display:none;float:left;}
+
+
+.display-name {
+  /* width: 150px;
+  display: -webkit-box;
+  display: -moz-box; */
+  white-space: pre-wrap;
+  word-wrap:break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
 .layui-nav * {
   font-size: 16px;
 }
