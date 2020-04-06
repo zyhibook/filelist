@@ -129,7 +129,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
             entries = self.app.cache[dirname][key][1]
             for doc in entries:
                 if doc[3]:
-                    nodes.append({'name': doc[0].name, 'spread': False, 'href': f'{self.request.path}?path={doc[0]}', 'children': self.get_nodes(self.app.root / dirname / doc[0])})
+                    nodes.append({'name': doc[0].name, 'href': f'{self.request.path}?path={doc[0]}', 'children': self.get_nodes(self.app.root / dirname / doc[0])})
                 else:
                     nodes.append({'name': doc[0].name, 'href': f'{self.request.path}?path={doc[0]}'})
         return nodes
@@ -269,7 +269,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
         path1 = self.path
         path2 = Path(str(self.root)+"/"+(parse.unquote(self.request.uri.split("/"+mode+"?path=")[1])))
         path3 = Path(str(self.root)+"/"+(self.request.uri.split("/"+mode+"?path=")[1]))
-        if path1.exists(): 
+        if path1.exists():
             if path1.is_file():
                 path1.unlink()
                 rd.delete("FILELIST:"+str(path1).split(str(self.root)+"/")[1])

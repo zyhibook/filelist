@@ -35,10 +35,9 @@
 		</div>
 		<div class="layui-col-md3" style="text-align:right;">
 			{% if handler.mode == 'home' %}
-		    <button title="批量删除" class="layui-btn layui-btn-danger layui-btn-xs btn-delete"><i class="layui-icon layui-icon-delete"></i></button>
+        <a title="批量删除" class="batch-select" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-delete"></i></a>
 			{% end %}
-			<a title="全选" class="batch-select" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-add-1" style="font-size:18px"></i></a>
-			<a title="反选" class="batch-unselect" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-fonts-clear" style="font-size:18px"></i></a>
+			<a title="反选" class="batch-unselect" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-addition" style="font-size:18px"></i></a>
 			<a title="批量分享" class="batch-share" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-share"></i></a>
 		</div>
       </div>
@@ -395,25 +394,26 @@
         });
       })
 
-      if(getCookie('tree')){
-        layui.tree({
+      $.get(location.pathname + '?f=tree', function(ret){
+        layui.tree.render({
           elem: '#tree',
-          nodes: JSON.parse('{% raw nodes %}'),
+          accordion: true,
+          isJump: true,
+          data: ret.nodes,
         });
-      }
+      })
 
     $(document).on("click", ".tree-toggle", function(){
       if(getCookie("tree")){
         removeCookie("tree")
         $('.tree-toggle i').removeClass("layui-icon-shrink-right").addClass("layui-icon-spread-left")
         $("#tree").addClass("hidden")
-        $(".tree-table").addClass("layui-col-md12").removeClass("layui-col-md9")
+        $(".tree-table").addClass("layui-col-md12").removeClass("layui-col-md10")
       }else{
         setCookie("tree", "on")
         $('.tree-toggle i').removeClass("layui-icon-spread-left").addClass("layui-icon-shrink-right")
         $("#tree").removeClass("hidden")
-        $(".tree-table").addClass("layui-col-md9").removeClass("layui-col-md12")
-        location.reload()
+        $(".tree-table").addClass("layui-col-md10").removeClass("layui-col-md12")
       }
     })
 	
