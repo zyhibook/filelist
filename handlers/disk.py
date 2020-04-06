@@ -129,9 +129,9 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
             entries = self.app.cache[dirname][key][1]
             for doc in entries:
                 if doc[3]:
-                    nodes.append({'name': doc[0].name, 'href': f'{self.request.path}?path={doc[0]}', 'children': self.get_nodes(self.app.root / dirname / doc[0])})
+                    nodes.append({'title': doc[0].name, 'href': f'{self.request.path}?path={doc[0]}', 'children': self.get_nodes(self.app.root / dirname / doc[0])})
                 else:
-                    nodes.append({'name': doc[0].name, 'href': f'{self.request.path}?path={doc[0]}'})
+                    nodes.append({'title': doc[0].name, 'href': f'{self.request.path}?path={doc[0]}'})
         return nodes
 
     def set_headers(self):

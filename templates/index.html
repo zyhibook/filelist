@@ -42,10 +42,10 @@
 		</div>
       </div>
       <div class="layui-row">
-        <div class="layui-col-md3" style="min-height:0.1px;">
+        <div class="layui-col-md2" style="min-height:0.1px;">
           <ul id="tree" {% if not handler.get_cookie('tree') %}class="hidden"{% end %}></ul>
         </div>
-        <div class="tree-table layui-col-md{{ 9 if handler.get_cookie('tree') else 12 }}">
+        <div class="tree-table layui-col-md{{ 10 if handler.get_cookie('tree') else 12 }}">
 		  {% if handler.get_cookie('display') %}
 		  <table class="filelist layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
             <thead>
