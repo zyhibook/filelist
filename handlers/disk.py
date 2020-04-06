@@ -185,7 +185,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
             self.render('index.html', entries=entries, nodes='[]')
         elif self.args.f == 'tree':
             nodes = self.get_nodes(path)
-            self.finish(nodes)
+            self.finish({'nodes': nodes})
         elif self.args.f == 'download':
             rd.incr("FILELIST:"+name)
             zh = re.compile(u'[\u4e00-\u9fa5]+')
