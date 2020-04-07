@@ -21,7 +21,6 @@
       <div class="crumbs layui-col-md12">
 	    <div class="layui-col-md9">
 			<a title="tree-toggle" href="javascript:;" class="tree-toggle"><i class="layui-icon {{ 'layui-icon-shrink-right' if handler.get_cookie('tree') else 'layui-icon-spread-left' }}"></i></a>
-			<a title="预览" class="btn-preview" href="javascript:;" style="margin-right:5px"><i class="layui-icon {{ 'layui-icon-pause' if handler.get_cookie('preview') else 'layui-icon-play' }}"></i></a>
 			<a title="样式" class="btn-display" href="javascript:;" style="margin-right:5px"><i class="layui-icon {{ 'layui-icon-table' if handler.get_cookie('display') else 'layui-icon-list' }}" style="font-size:20px"></i></a>
 			{% set paths = list(filter(None, handler.get_argument('path', '').rstrip('/').split('/'))) %}
 			<span class="layui-breadcrumb">
@@ -36,6 +35,7 @@
 		{% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
 		<div class="layui-col-md3" style="text-align:right;">
 			{% if handler.mode == 'home' %}
+			<a title="预览" class="btn-preview" href="javascript:;" style="margin-right:5px"><i class="layui-icon {{ 'layui-icon-pause' if handler.get_cookie('preview') else 'layui-icon-play' }}"></i></a>
 			<a title="批量删除" class="btn-delete" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-delete"></i></a>
 			{% end %}
 			<a title="反选" class="batch-unselect" href="javascript:;" style="margin-right:5px"><i class="layui-icon layui-icon-addition" style="font-size:18px"></i></a>
