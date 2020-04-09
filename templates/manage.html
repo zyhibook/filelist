@@ -6,6 +6,7 @@
   <table class="layui-table table-hover table-bordered table-sm" lay-skin="line" align="center">
     <thead>
       <tr>
+	<th>序号</th>
         <th>帐号</th>
         <th>邮箱</th>
         <th>时间</th>
@@ -16,6 +17,7 @@
     <tbody>
       {% for doc in entries %}
       <tr>
+        <td>{{ doc.id }}</td>
         <td>{{ doc.username }}</td>
         <td>{{ doc.email }}</td>
         <td>{{ str(doc.created_at)[:19] }}</td>

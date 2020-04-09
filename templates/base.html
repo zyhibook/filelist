@@ -23,7 +23,11 @@
           <li class="layui-nav-item"><a href="/public">共享文件</a></li>
           <li class="layui-nav-item"><a href="/home">我的文件</a></li>
           <form class="layui-form" action="{{ handler.request.path }}">
+	    {% if handler.request.path == '/manage/user' and current_user and current_user.admin %}
+            <input class="layui-input" placeholder="Email" name="email" {% if handler.args.email %}value="{{ handler.args.email }}"{% end %}>
+	    {% else %}
             <input class="layui-input" placeholder="..." name="q" {% if handler.args.q %}value="{{ handler.args.q }}"{% end %}>
+	    {% end %}
           </form>
         </ul>
         <ul class="layui-nav user" lay-filter="">
@@ -31,7 +35,7 @@
             <a href="javascript:;"><span class="username"></span></a>
             <dl class="layui-nav-child">
               <dd><a href="/admin">我的帐户</a></dd>
-              {% if current_user and current_user.username in ['admin','ywgx'] %}
+              {% if current_user and current_user.admin %}
               <dd><a href="/manage/user">用户管理</a></dd>
               {% end %}
               <dd><a href="/manage/share">分享管理</a></dd>
