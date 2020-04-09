@@ -87,36 +87,36 @@
                 <td style="text-align:left !important">
                   {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
                   {% if entry[0].suffix.lower() in ['.tar', '.gz', '.bz2', '.xz', '.tgz', '.bz2', '.bz', '.zip'] %}
-                  <button class="layui-btn layui-btn-normal layui-btn-xs btn-compress">解压</button>
+                  <button class="layui-btn layui-btn-normal layui-btn-xs btn-compress layui-btn-primary">解压</button>
                   {% elif entry[0].suffix.lower() in ['.lua', '.json', '.yml', '.yaml', '.jpg', '.jpeg', '.ico','.bmp', '.png','.mp3', '.mp4', '.ogg', '.pdf','.txt', '.md', '.py', '.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue', '.ipynb','.conf'] %}
-                  <button class="layui-btn layui-btn-success layui-btn-xs btn-open">预览</button>
+                  <button class="layui-btn layui-btn-success layui-btn-xs btn-open layui-btn-primary">预览</button>
                   {% elif entry[3] %}
-                  <button class="layui-btn layui-btn-primary layui-btn-xs btn-compress">压缩</button>
+                  <button class="layui-btn layui-btn-primary layui-btn-xs btn-compress layui-btn-primary">压缩</button>
                   {% else %}
-                  <a href="{{ handler.request.path }}?path={{ entry[5] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">下载</a>
+                  <a href="{{ handler.request.path }}?path={{ entry[5] }}&f=download" class="layui-btn layui-btn-xs layui-btn-primary">下载</a>
                   {% end %}
                   {% end %}
                   {% if handler.request.path == '/home' or (handler.request.path == '/public' and current_user and current_user.admin) %}
-                  <button class="layui-btn layui-btn-danger layui-btn-xs btn-delete btn-delete-single">
+                  <button class="layui-btn layui-btn-xs btn-delete btn-delete-single layui-btn-radius layui-btn-primary">
                     <i class="layui-icon layui-icon-delete"></i>
                   </button>
                   {% end %}
                   {% if handler.request.path == '/public' or handler.request.path.startswith('/share') %}
-                  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-copy">
+                  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-copy layui-btn-radius layui-btn-primary">
                     <i class="layui-icon layui-icon-link"></i>
                   </button>
                   {% else %}
-                  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-share">
+                  <button data-clipboard-text="{{ handler.request.protocol }}://{{ handler.request.host }}{{ handler.request.path }}?path={{ entry[0] }}" class="layui-btn layui-btn-xs btn-share layui-btn-radius layui-btn-primary">
                     <i class="layui-icon layui-icon-share"></i>
                   </button>
                   {% end %}
                   {% if not entry[3] %}
-                  <a href="{{ handler.request.path }}?path={{ entry[5] }}&f=download" class="layui-btn layui-btn-secondary layui-btn-xs">
-                    <i class="layui-icon layui-icon-download-circle"></i>
+                  <a href="{{ handler.request.path }}?path={{ entry[5] }}&f=download" class="layui-btn layui-btn-xs layui-btn-radius layui-btn-primary">
+                    <i class="layui-icon layui-icon-down"></i>
                   </a>
                   {% end %}
                   {% if current_user and entry[0].suffix.lower() in ['.pdf', '.txt', '.mobi', '.azw', '.doc', '.docx', '.html', '.htm', '.rtf', '.jpeg', '.jpg', '.gif', '.png', '.bmp'] %}
-                  <button class="layui-btn layui-btn-info layui-btn-xs btn-kindle">
+                  <button class="layui-btn layui-btn-info layui-btn-xs btn-kindle layui-btn-radius layui-btn-primary">
                     <i class="layui-icon layui-icon-upload-drag"></i>
                   </button>
                   {% end %}

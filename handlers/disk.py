@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#*************************************************
+# *************************************************
 # Description : ~/xlabs/filelist/handlers/disk.py
 # Version     : 2.0
 # Author      : XABCLOUD.COM
-#*************************************************
+# *************************************************
 import asyncio
 import datetime
 import json
@@ -55,11 +55,11 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
         'image.png': ['.png', '.jpg', '.jpeg', '.bmp', '.gif'],
         'audio.png': ['.amr', '.ogg', '.wav', '.mp3', '.flac', '.m4a'],
         'video.png': ['.rmvb', '.rm', '.mkv', '.mp4', '.avi', '.wmv'],
-        'rar.png': ['.rar', '.tar', '.tgz', '.gz', '.bz2', '.bz', '.xz', '.zip', '.7z'],
+        'zip.png': ['.rar', '.tar', '.tgz', '.gz', '.bz2', '.bz', '.xz', '.zip', '.7z'],
         'c.png': ['.c', '.h'],
         'cpp.png': ['.cpp'],
         'python.png': ['.py', '.pyc'],
-        'shell.png': ['.sh'],
+        'bash.png': ['.sh'],
         'go.png': ['.go'],
         'java.png': ['.java', '.javac', '.class', '.jar'],
         'javascript.png': ['.js'],
@@ -69,11 +69,11 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
         'json.png': ['.json', '.yml', '.yaml'],
         'markdown.png': ['.md', '.markdown'],
         'ini.png': ['.ini'],
-        'db.png': ['.db', '.sql', '.dump'],
-        'kindle.jpg': ['.mobi', '.awz', '.awz3'],
-        'svg.jpg': ['.svg'],
+        'database.png': ['.db', '.sql', '.dump'],
+        'kindle.png': ['.mobi', '.awz', '.awz3'],
+        'svg.png': ['.svg'],
         'lua.png': ['.lua'],
-        'win.png': ['.exe'],
+        'exe.png': ['.exe'],
         'mac.png': ['.pkg'],
         'key.png': ['.key'],
         'pki.png': ['.crt', '.pem'],
@@ -187,7 +187,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
             nodes = self.get_nodes(path)
             self.finish({'nodes': nodes})
         elif self.args.f == 'download':
-            rd.incr("FILELIST:"+name)
+            rd.incr("FILELIST:" + name)
             zh = re.compile(u'[\u4e00-\u9fa5]+')
             if zh.search(path.name):
                 self.set_header('Content-Disposition', f"attachment;filename*=UTF-8''{parse.quote(path.name.encode('UTF-8'))}")
@@ -195,9 +195,9 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
                 self.set_header('Content-Disposition', f'attachment;filename={parse.quote(path.name)}')
             await super().get(name, include_body)
         elif path.is_file():
-            rd.incr("FILELIST:"+name)
+            rd.incr("FILELIST:" + name)
             if path.suffix.lower() in ['.yml', '.yaml']:
-                doc = yaml.load(open(path),Loader=yaml.FullLoader)
+                doc = yaml.load(open(path), Loader=yaml.FullLoader)
                 self.finish(doc)
             elif path.suffix.lower() in ['.md', '.markdown']:
                 exts = ['markdown.extensions.extra', 'markdown.extensions.codehilite', 'markdown.extensions.tables', 'markdown.extensions.toc']
@@ -209,12 +209,12 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
                     dl = await asyncio.create_subprocess_shell(command)
                     await dl.wait()
                     self.finish(fp.read().replace('<link rel="stylesheet" href="custom.css">', ''))
-            elif path.suffix.lower() in ['.md','.txt','.py','.lua','.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue','.conf','.yml','.yaml','.ipynb']:
+            elif path.suffix.lower() in ['.md', '.txt', '.py', '.lua', '.sh', '.h', '.c', '.cpp', '.js', '.css', '.html', '.java', '.go', '.ini', '.vue', '.conf', '.yml', '.yaml', '.ipynb']:
                 try:
                     self.send_html(f'''<pre><code>{ tornado.escape.xhtml_escape(path.read_text()) }</code></pre>''')
                 except:
                     self.send_html(f'''<pre><code>{ tornado.escape.xhtml_escape(path.read_text(encoding='unicode_escape')) }</code></pre>''')
-            elif path.suffix.lower() in ['.jpg', '.jpeg', '.ico','.bmp', '.png','.mp3', '.mp4', '.ogg', '.pdf']:
+            elif path.suffix.lower() in ['.jpg', '.jpeg', '.ico', '.bmp', '.png', '.mp3', '.mp4', '.ogg', '.pdf']:
                 await super().get(name, include_body)
             elif mode not in ['public', 'home']:
                 zh = re.compile(u'[\u4e00-\u9fa5]+')
@@ -267,33 +267,33 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
         if self._finished:
             return
         path1 = self.path
-        path2 = Path(str(self.root)+"/"+(parse.unquote(self.request.uri.split("/"+mode+"?path=")[1])))
-        path3 = Path(str(self.root)+"/"+(self.request.uri.split("/"+mode+"?path=")[1]))
+        path2 = Path(str(self.root) + "/" + (parse.unquote(self.request.uri.split("/" + mode + "?path=")[1])))
+        path3 = Path(str(self.root) + "/" + (self.request.uri.split("/" + mode + "?path=")[1]))
         if path1.exists():
             if path1.is_file():
                 path1.unlink()
-                rd.delete("FILELIST:"+str(path1).split(str(self.root)+"/")[1])
+                rd.delete("FILELIST:" + str(path1).split(str(self.root) + "/")[1])
             else:
-                shutil.rmtree(path1,ignore_errors=True)
-                for e in rd.keys("FILELIST:"+str(path1).split(str(self.root)+"/")[1]+"/*"):
+                shutil.rmtree(path1, ignore_errors=True)
+                for e in rd.keys("FILELIST:" + str(path1).split(str(self.root) + "/")[1] + "/*"):
                     rd.delete(e)
             self.finish(f'{path1} removed')
         elif path2.exists():
             if path2.is_file():
                 path2.unlink()
-                rd.delete("FILELIST:"+str(path2).split(str(self.root)+"/")[1])
+                rd.delete("FILELIST:" + str(path2).split(str(self.root) + "/")[1])
             else:
-                shutil.rmtree(path2,ignore_errors=True)
-                for e in rd.keys("FILELIST:"+str(path2).split(str(self.root)+"/")[1]+"/*"):
+                shutil.rmtree(path2, ignore_errors=True)
+                for e in rd.keys("FILELIST:" + str(path2).split(str(self.root) + "/")[1] + "/*"):
                     rd.delete(e)
             self.finish(f'{path2} removed')
         elif path3.exists():
             if path3.is_file():
                 path3.unlink()
-                rd.delete("FILELIST:"+str(path3).split(str(self.root)+"/")[1])
+                rd.delete("FILELIST:" + str(path3).split(str(self.root) + "/")[1])
             else:
-                shutil.rmtree(path3,ignore_errors=True)
-                for e in rd.keys("FILELIST:"+str(path3).split(str(self.root)+"/")[1]+"/*"):
+                shutil.rmtree(path3, ignore_errors=True)
+                for e in rd.keys("FILELIST:" + str(path3).split(str(self.root) + "/")[1] + "/*"):
                     rd.delete(e)
             self.finish(f'{path3} removed')
         else:
@@ -306,7 +306,7 @@ class IndexHandler(tornado.web.StaticFileHandler, BaseHandler):
         if self.request.files:
             for items in self.request.files.values():
                 for item in items:
-                    filename = self.path /re.sub('[\.\+]+','.',item['filename'])
+                    filename = self.path / re.sub('[\.\+]+', '.', item['filename'])
                     dirname = filename.parent
                     dirname.exists() or os.makedirs(dirname)
                     filename.write_bytes(item['body'])

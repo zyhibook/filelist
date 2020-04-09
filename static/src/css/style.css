@@ -177,47 +177,6 @@ input[type=file] {
   margin-right: 0
 }
 
-.layui-btn, .layui-btn:hover {
-  color: #fff;
-  border: 1px solid #009688;
-}
-
-.layui-btn-default, .layui-btn-default:hover {
-  border: 1px solid #C9C9C9;
-  background-color: #fff;
-  color: #555;
-}
-
-.layui-btn-primary, .layui-btn-primary:hover {
-  border: 1px solid #007bff;
-  background-color: #007bff;
-}
-
-.layui-btn-success, .layui-btn-success:hover {
-  border: 1px solid #28a745;
-  background-color: #28a745;
-}
-
-.layui-btn-danger, .layui-btn-danger:hover {
-  border: 1px solid #FF5722;
-  background-color: #FF5722;
-}
-
-.layui-btn-normal, .layui-btn-normal:hover {
-  border: 1px solid #1E9FFF;
-  background-color: #1E9FFF;
-}
-
-.layui-btn-info, .layui-btn-info:hover {
-  border: 1px solid #17a2b8;
-  background-color: #17a2b8;
-}
-
-.layui-btn-secondary, .layui-btn-secondary:hover {
-  border: 1px solid #6c757d;
-  background-color: #6c757d;
-}
-
 .layui-breadcrumb span[lay-separator] {
   margin: 0 5px;
 }
