@@ -1,0 +1,39 @@
+version: "3"
+services:
+  filelist:
+    image: ywgx/filelist:v1
+    depends_on:
+      - redis
+      - mongo
+    restart: always
+    volumes:
+      - /opt/data:/files:rw
+    links:
+      - redis
+      - mongo
+    ports:
+      - 80:80
+    environment:
+      - TZ=Asia/Shanghai
+    container_name: filelist
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - /opt/2/redis:/data:rw
+    ports:
+      - 127.0.0.1:6379:6379
+    environment:
+      - TZ=Asia/Shanghai
+    container_name: redis
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - /opt/2/mongo/db:/data/db:rw
+      - /opt/2/mongo/configdb:/data/configdb:rw
+    ports:
+      - 127.0.0.1:27017:27017
+    environment:
+      - TZ=Asia/Shanghai
+    container_name: mongo
