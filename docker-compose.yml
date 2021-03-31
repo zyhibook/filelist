@@ -1,13 +1,13 @@
 version: "3"
 services:
   filelist:
-    image: ywgx/filelist:v1
+    image: ywgx/filelist
     depends_on:
       - redis
       - mongo
     restart: always
     volumes:
-      - /opt/data:/files:rw
+      - /opt/data:/files
     links:
       - redis
       - mongo
@@ -20,7 +20,7 @@ services:
     image: redis:alpine
     restart: always
     volumes:
-      - /opt/2/redis:/data:rw
+      - /opt/2/redis:/data
     ports:
       - 127.0.0.1:6379:6379
     environment:
@@ -30,8 +30,8 @@ services:
     image: mongo
     restart: always
     volumes:
-      - /opt/2/mongo/db:/data/db:rw
-      - /opt/2/mongo/configdb:/data/configdb:rw
+      - /opt/2/mongo/db:/data/db
+      - /opt/2/mongo/configdb:/data/configdb
     ports:
       - 127.0.0.1:27017:27017
     environment:
