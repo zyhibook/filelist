@@ -7,12 +7,12 @@ services:
       - mongo
     restart: always
     volumes:
-      - /opt/data:/files
+      - /opt/data/filelist:/opt/files
     links:
       - redis
       - mongo
     ports:
-      - 80:80
+      - 80:10000
     environment:
       - TZ=Asia/Shanghai
     container_name: filelist
